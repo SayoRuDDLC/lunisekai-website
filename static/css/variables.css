@@ -1,0 +1,35 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+:root {
+    --font-family-nunito: "Nunito";
+    --font-family-archivo: "Archivo Black";
+
+    --font-size-small: 16px;
+    --font-size-default: 20px;
+    --font-size-medium: 24px;
+    --font-size-big: 48px;
+    --font-size-very-big: 58px;
+
+    --font-weight-default: 400;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-extrabold: 800;
+
+    --line-height-default: 1.4;
+
+    --color-white: #fff;
+    --color-black: black;
+    --color-gray: #aca7a7;
+    --color-dark-gray: #474444;
+    --color-very-dark-gray: #282626;
+    --color-silver: #d6d1d1;
+    --color-red: #ec9c9c;
+    --color-dark-red: #970b0b;
+    --color-body: rgb(37, 34, 34);
+    --color-header: rgb(41, 40, 40);
+    --color-link: rgb(219, 208, 208);
+    --color-title: rgb(244, 231, 231);
+    --color-start-btn-bg: rgb(222, 156, 156);
+    --color-start-btn-border: rgb(234, 193, 193);
+}

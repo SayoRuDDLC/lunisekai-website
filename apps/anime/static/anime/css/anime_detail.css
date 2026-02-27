@@ -1,0 +1,251 @@
+@import "/static/css/variables.css";
+/* Anime Detail */
+.anime {
+    color: var(--color-white);
+}
+
+.anime__title {
+    font-size: var(--font-size-big);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-white);
+    margin-top: 30px;
+}
+
+.anime__title-alter {
+    font-size: var(--font-size-medium);
+    color: var(--color-gray);
+}
+
+.anime__info-and-details {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.anime__poster {
+    width: 250px;
+    border-radius: 5px;
+}
+
+.anime__info-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.anime__buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.anime__icon {
+    width: 20px;
+}
+
+.anime__btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 280px;
+    height: 40px;
+    border-radius: 5px;
+    text-align: left;
+    padding-left: 16px;
+    border: none;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.anime__btn:hover {
+    opacity: 0.7;
+}
+
+.anime__watch-btn {
+    background-color: var(--color-dark-red);
+}
+
+.anime__add-list-btn {
+    background-color: var(--color-white);
+    color: var(--color-black);
+}
+
+.anime__details {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    grid-auto-rows: 40px;
+}
+
+.anime__detail {
+    color: var(--color-gray);
+}
+
+.anime__link {
+    color: var(--color-red);
+}
+
+.anime__desc {
+    margin-top: 30px;
+    opacity: 0.9;
+}
+
+.anime__desc-btn {
+    color: var(--color-red);
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.stills {
+    margin-top: 40px;
+}
+
+.stills__title {
+    font-size: var(--font-size-big);
+}
+
+
+.stills__images {
+    display: grid;
+    justify-content: space-between;
+    align-items: center;
+    grid-template-columns: repeat(4, 320px);
+    margin-top: 10px;
+    padding-bottom: 100px;
+}
+
+.stills__still {
+    height: 170px;
+    object-fit: cover;
+}
+
+.stills__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.stills__img:hover {
+    transform: scale(1.05);
+}
+
+.player {
+    padding-bottom: 100px;
+}
+
+.player__video-and-voices {
+    display: grid;
+    grid-template-columns: 80% 20%;
+    height: 600px;
+}
+
+.player__video {
+    height: 100%;
+    width: 100%;
+    aspect-ratio: 16/7;
+    position: relative;
+}
+
+.player__video video,
+.player__video img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.player__nums {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.player__nums-slider {
+    display: flex;
+    overflow: hidden;
+    width: 60%;
+    gap: 20px;
+}
+
+.player__info {
+    position: relative;
+}
+
+.player__info::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    background-color: white;
+    bottom: 0;
+    left: 0;
+}
+
+.player__num-btn {
+    border: 1px solid var(--color-dark-gray);
+    border-radius: 5px;
+    width: 130px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.player__num-btn:hover {
+    background-color: var(--color-dark-gray);
+}
+
+.player__btn-prev, .player__btn-next {
+    width: 60px;
+    border-radius: 5px;
+    border: 1px solid var(--color-dark-gray);
+}
+
+.player__btn-prev:hover, .player__btn-next:hover {
+    background-color: var(--color-dark-gray);
+}
+
+.player__voices {
+    display: flex;
+    flex-direction: column;
+}
+
+.player__voices-info {
+    padding-left: 30px;
+    position: relative;
+}
+
+.player__voices-info::after {
+    content: '';
+    position: absolute;
+    width: 90%;
+    height: 1px;
+    background-color: var(--color-dark-gray);
+    bottom: -6px;
+    left: 5%;
+}
+
+.player__voices-btns {
+    display: flex;
+    gap: 8px;
+    flex-direction: column;
+    margin-top: 14px;
+}
+
+.player__voice-btn {
+    text-align: left;
+    border: 1px solid var(--color-dark-gray);
+    border-radius: 5px;
+    width: 250px;
+    height: 40px;
+    padding-left: 20px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.player__voice-btn:hover {
+    background-color: var(--color-dark-gray);
+}
+
+.btn-active {
+    color: var(--color-red);
+}

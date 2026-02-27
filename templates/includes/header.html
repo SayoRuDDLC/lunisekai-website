@@ -1,0 +1,62 @@
+{% load static %}
+
+<header class="header">
+    <div class="container">
+        <a href="{% url 'anime:home' %}" class="logo header__logo">
+            <div class="logo__wrapper">
+                <img
+                        src="{% static 'images/logo.png' %}"
+                        alt=""
+                        class="logo__img"
+                        width="200px"
+                />
+            </div>
+        </a>
+
+        <nav class="header__nav">
+            <ul class="header__nav-list">
+                <li class="header__nav-item">
+                    <a href="{% url 'anime:anime_list' %}" class="header__nav-link">Аниме</a>
+                </li>
+                <li class="header__nav-item">
+                    <a href="{% url 'anime:manga_list' %}" class="header__nav-link">Манга</a>
+                </li>
+                <li class="header__nav-item">
+                    <a href="{% url 'anime:novel_list' %}" class="header__nav-link">Ранобэ</a>
+                </li>
+                <li class="header__nav-item">
+                    <a href="#" class="header__nav-link">Поиск</a>
+                </li>
+                {% for link in nav_links %}
+                    <li class="header__nav-item">
+                        <a href="{% url link.url %}" class="header__nav-link">{{ link.title }}</a>
+                    </li>
+                {% endfor %}
+                <li class="header__nav-item header__account">
+                    <a href="#" class="header__nav-link"
+                    >Вход | Регистрация</a
+                    >
+                </li>
+                {% if menu_links %}
+                    <li class="header__nav-item">
+                        <div class="header__dropdown">
+                            <div
+                                    class="header__menu-btn"
+                                    id="header-menu-btn"
+                                    onclick="toggleMenu()"
+                            >
+                                <img src="{% static 'anime/images/icons/menu.png' %}" alt="Меню" class="header__menu-img">
+                            </div>
+                        </div>
+                        <div class="header__menu" id="header-menu" style="display: none">
+                            {% for link in menu_links %}
+                                <a href="{% url link.url %}" class="header__menu-link">{{ link.title }}</a>
+                            {% endfor %}
+                        </div>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</header>
+

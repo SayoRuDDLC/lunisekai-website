@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock %}
+
+{% block title %} LuniSekai {% endblock %}
+
+{% block content %}
+
+    <main class="main welcome">
+        <div class="container">
+            <div class="welcome__text">
+                <h1 class="welcome__title">Твоё окно в другую<br> реальность.</h1>
+                <div class="welcome__buttons">
+                    <button class="start-btn welcome__start-btn">Начать своё приключение</button>
+                </div>
+            </div>
+            <div class="welcome__cards">
+                <div class="welcome__card welcome__card--1">
+                    <img
+                            src="{% static 'images/posters/dandandan.jpg' %}"
+                            alt=""
+                            class="welcome__card-img"
+                    />
+                </div>
+                <div class="welcome__card welcome__card--2">
+                    <img
+                            src="{% static 'images/posters/aot.jpg' %}"
+                            alt=""
+                            class="welcome__card-img"
+                    />
+                </div>
+                <div class="welcome__card welcome__card--3">
+                    <img
+                            src="{% static 'images/posters/classroom.jpg' %}"
+                            alt=""
+                            class="welcome__card-img"
+                    />
+                </div>
+                <div class="welcome__card welcome__card--4">
+                    <img
+                            src="{% static 'images/posters/overflow.jpg' %}"
+                            alt=""
+                            class="welcome__card-img"
+                    />
+                </div>
+                <div class="welcome__card welcome__card--5">
+                    <img
+                            src="{% static 'images/posters/chainsaw.jpg' %}"
+                            alt=""
+                            class="welcome__card-img"
+                    />
+                </div>
+                <div class="welcome__card welcome__card--6">
+                    <img
+                            src="{% static 'images/posters/apothecary.jpg' %}"
+                            alt=""
+                            class="welcome__card-img"
+                    />
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

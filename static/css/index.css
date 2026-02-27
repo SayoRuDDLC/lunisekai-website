@@ -1,0 +1,70 @@
+@import '/static/css/variables.css';
+
+/* Welcome */
+.welcome {
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.8), transparent), url("../images/hero_bg.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100vh;
+}
+
+.welcome .container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.welcome__title {
+    font-family: var(--font-family-archivo), sans-serif;
+    font-size: var(--font-size-very-big);
+    font-weight: var(--font-weight-extrabold);
+    color: var(--color-title);
+    margin-top: 150px;
+    width: 700px;
+}
+
+.welcome__start-btn {
+    margin-top: 34px;
+}
+
+.welcome__cards {
+    height: 600px;
+    width: 600px;
+    position: relative;
+}
+
+.welcome__card {
+    position: absolute;
+    width: 200px;
+}
+
+.welcome__card--1 {
+    top: 55%;
+    left: 25%;
+}
+
+.welcome__card--2 {
+    top: 35%;
+    left: -5%;
+}
+
+.welcome__card--3 {
+    top: 12%;
+    left: 10%;
+}
+
+.welcome__card--4 {
+    top: 40%;
+    left: 60%;
+}
+
+.welcome__card--5 {
+    top: 5%;
+    left: 45%;
+}
+
+.welcome__card--6 {
+    top: 25%;
+    left: 30%;
+}

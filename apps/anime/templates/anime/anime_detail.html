@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load anime_tags %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'anime/css/anime_detail.css' %}">
+{% endblock %}
+
+{% block title %}{{ anime.title }}{% endblock %}
+
+{% block header %}
+    {% url 'anime:anime_random' as random_url %}
+    {% include 'includes/header.html' with anime_detail='true' %}
+{% endblock %}
+
+{% block content %}
+    <main class="main anime">
+        <div class="container">
+            <h1 class="anime__title">{{ anime.title }}</h1>
+            <h2 class="anime__title-alter">{{ anime.title_alter }}</h2>
+            <div class="anime__info-and-details">
+                <div class="anime__img-column">
+                    <div class="anime__img-wrapper">
+                        {% if anime.poster %}
+                            <img src="{{ anime.poster.url }}" alt="{{ anime.title }}" class="anime__poster">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="anime__info-column">
+                    <div class="anime__details">
+                        <p class="anime__detail">Тип</p>
+                        <p class="anime__format"><a href="{% url 'anime:anime_format' anime.format %}"
+                                                    class="anime__link">{{ anime.get_format_display }}</a></p>
+                        <p class="anime__detail">Эпизоды</p>
+                        <p class="anime__ep-count">{{ anime.episodes_count }}</p>
+                        <p class="anime__detail">Жанры</p>
+                        <p class="anime__genres">
+                            {% for genre in anime.active_genres %}
+                                <a href="{{ genre.get_absolute_url }}"
+                                   class="anime__link">{{ genre.name }}</a>{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </p>
+                        <p class="anime__detail">Сезон</p>
+                        <p class="anime__date">
+                            <a href="{% url 'anime:anime_season_and_year' anime.release_season anime.release_year %}"
+                               class="anime__link">
+                                {{ anime.get_release_season_display }} {{ anime.release_year }}
+                            </a>
+                        </p>
+                        <p class="anime__detail">Статус</p>
+                        <p class="anime__status">
+                            {% if anime.status %}
+                                <a href="{% url 'anime:anime_status' anime.status %}"
+                                   class="anime__link">{{ anime.get_status_display }}</a>
+                            {% else %}
+                                Неизвестно
+                            {% endif %}
+                        </p>
+                        <p class="anime__detail">Возраст</p>
+                        <p class="anime__age-rating">{{ anime.get_age_rating_display }}</p>
+                        <p class="anime__detail">Студия</p>
+                        <p class="anime__studio">
+                            {% if anime.studio %}
+                                <a href="{{ anime.studio.get_absolute_url }}" class="anime__link">
+                                    {{ anime.studio.name }}
+                                </a>
+                            {% else %}
+                                Неизвестно
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="anime__buttons">
+                        <button class="anime__watch-btn anime__btn" aria-label="Смотреть онлайн">
+                            <img src="{% static 'anime/images/icons/play.png' %}" alt="" class="anime__icon">
+                            Смотреть онлайн
+                        </button>
+                        <button class="anime__add-list-btn anime__btn" aria-label="Добавить в список">
+                            <img src="{% static 'anime/images/icons/add_list.png' %}" alt="" class="anime__icon">
+                            Добавить в список
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% include 'anime/includes/anime_short_desc.html' %}
+
+            {% get_stills anime 4 as stills %}
+            {% if stills %}
+                <div class="stills">
+                    <h2 class="stills__title">Кадры</h2>
+                    <div class="stills__images">
+                        {% for still in stills %}
+                            <div class="stills__still">
+                                <img src="{{ still.image.url }}" alt="Кадр из {{ anime.title }}" class="stills__img">
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if anime.episodes_numbers %}
+                <div class="player">
+                    <div class="player__video-and-voices">
+                        <div hx-get="{% url 'htmx:get_episode' anime.slug anime.episodes_numbers.0.number %}"
+                             hx-target=".player__video-and-voices"
+                             hx-trigger="load"></div>
+                    </div>
+                    <div class="player__nums">
+                        <div class="player__info">Серия №</div>
+                        <div class="player__nums-slider">
+                            {% for episode in anime.episodes_numbers %}
+                                <div class="player__btn">
+                                    <button hx-get="{% url 'htmx:get_episode' anime.slug episode.number %}"
+                                            hx-target=".player__video-and-voices"
+                                            hx-swap="innerHTML swap:100ms"
+                                            class="player__num-btn {% if forloop.first %}btn-active{% endif %}">{{ episode.number }}
+                                        серия
+                                    </button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="player__btn">
+                            <button class="player__btn-prev">⭠</button>
+                            <button class="player__btn-next">⭢</button>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </main>
+    <script src="{% static 'js/active-num-btn.js' %}"></script>
+{% endblock %}
+

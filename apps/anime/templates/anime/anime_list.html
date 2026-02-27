@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load anime_tags %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'anime/css/anime_list.css' %}">
+{% endblock %}
+
+{% block header %}
+    {% include 'includes/header.html' with anime_list='true' %}
+{% endblock %}
+
+{% block title %} Список аниме {% endblock %}
+
+{% block content %}
+    <main class="main">
+        <div class="container">
+            <div class="anime-list">
+                {% include 'anime/includes/anime_list_card.html' %}
+            </div>
+
+            <div class="filters__wrapper">
+                <form class="filters" method="get" id="filters-form"
+                      hx-get="{% url 'anime:anime_list' %}"
+                      hx-target=".anime-list"
+                      hx-replace-url='true'
+                      hx-trigger="change"
+                      autocomplete="off"
+                >
+                    <h2 class="filters__title">Фильтр</h2>
+
+                    <div class="filters__year-wrapper">
+                        <p>от <input type="number" class="filters__year-from" name="year-from" placeholder="1980"
+                                     value="{% if selected_year_from %}{{ selected_year_from }}{% endif %}"></p>
+                        <p>до <input type="number" class="filters__year-to" name="year-to" placeholder="2026"
+                                     value="{% if selected_year_to %}{{ selected_year_to }}{% endif %}"></p>
+                    </div>
+
+                    <div class="filters__format-wrapper">
+                        <h3 class="filters__subtitle">Формат</h3>
+                        <div class="filters__format-list">
+                            {% get_formats as formats %}
+                            {% for format in formats %}
+                                <label class="filters__format-label">
+                                    <input type="checkbox" class="filters__format" name="format" value="{{ format.0 }}"
+                                           {% if format.0 in selected_formats %}checked{% endif %}>
+                                    <span class="filters__checkmark"></span>
+                                    {{ format.1 }}
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="filters__statuses">
+                        <h3 class="filters__subtitle">Статус</h3>
+                        <div class="filters__statuses-list">
+                            {% get_statuses as statuses %}
+                            {% for status in statuses %}
+                                <label class="filters__status-label">
+                                    <input type="checkbox" class="filters__status" name="status" value="{{ status.0 }}"
+                                           {% if status.0 in selected_statuses %}checked{% endif %}>
+                                    <span class="filters__checkmark"></span>
+                                    {{ status.1 }}
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="filters__age-ratings">
+                        <h3 class="filters__subtitle">Возрастной рейтинг</h3>
+                        <div class="filters__age-ratings-list">
+                            {% get_age_ratings as age_ratings %}
+                            {% for age_rating in age_ratings %}
+                                <label class="filters__age-rating-label">
+                                    <input type="checkbox" class="filters__age-rating" name="age-rating"
+                                           value="{{ age_rating.0 }}"
+                                           {% if age_rating.0 in selected_age_ratings %}checked{% endif %}>
+                                    <span class="filters__checkmark"></span>
+                                    {{ age_rating.1 }}
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+    <script src="{% static 'js/filters.js' %}"></script>
+{% endblock %}

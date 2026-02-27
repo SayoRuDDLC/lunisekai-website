@@ -1,0 +1,9 @@
+<div class="anime__desc" id="anime-desc">
+    {{ anime.desc|truncatechars:300 }}
+    {% if anime.desc %}
+    <div hx-get="{% url 'htmx:get_desc' anime.slug %}?full=true" hx-target="#anime-desc" hx-swap="innerHTML"
+         hx-trigger="click" class="anime__desc-btn">
+        Развернуть
+    </div>
+    {% endif %}
+</div>

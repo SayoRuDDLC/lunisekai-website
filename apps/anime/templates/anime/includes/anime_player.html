@@ -1,0 +1,29 @@
+{% load static %}
+<div class="player__video">
+    {% if video %}
+        <video controls preload="metadata" width="100%">
+            <source src="{{ video.video.url }}" type="video/mp4">
+        </video>
+    {% else %}
+        <img src="{% static 'images/anime-not-found.jpg' %}" alt="Anime not found" class="player__not-found">
+    {% endif %}
+</div>
+
+<div class="player__voices">
+    <div class="player__voices-info">Озвучка</div>
+    <div class="player__voices-btns">
+        {% if videos %}
+            {% for video in videos %}
+                <button
+                        hx-get="{% url 'htmx:get_episode' episode.anime.slug episode.number %}?voice={{ video.voice.slug }}"
+                        hx-target=".player__video-and-voices"
+                        class="player__voice-btn {% if video.voice.slug == active_voice_slug or not active_voice_slug and forloop.first %}btn-active{% endif %}"
+                >
+                    {{ video.voice.name }}
+                </button>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+
+

@@ -1,0 +1,65 @@
+@import 'variables.css';
+
+.header {
+    background-color: var(--color-header);
+    border-bottom: 1px solid #3a3a3a;
+    padding-bottom: 14px;
+    position: fixed;
+    width: 100%;
+    z-index: 2;
+}
+
+.header .container {
+    display: flex;
+    align-items: center;
+    padding-top: 12px;
+    gap: 40px;
+}
+
+.header__nav {
+    width: 100%;
+}
+
+.header__nav-list {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    height: 100%;
+}
+
+.header__account {
+    margin-left: auto;
+}
+
+.header__nav-link {
+    transition: 0.3s;
+    color: var(--color-link);
+    font-weight: var(--font-weight-semibold);
+}
+
+.header__nav-link:hover {
+    opacity: 0.7;
+}
+
+.header__dropdown {
+    cursor: pointer;
+}
+
+.header__menu {
+    position: absolute;
+    background-color: var(--color-dark-gray);
+    color: var(--color-white);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    right: 20px;
+    top: 54px;
+    padding: 14px;
+    border-radius: 5px;
+    gap: 10px;
+}
+
+.header__menu-img {
+    width: 32px;
+}

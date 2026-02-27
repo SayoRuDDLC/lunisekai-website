@@ -1,0 +1,25 @@
+<!doctype html>
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"></script>
+    <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    {% block css %}{% endblock %}
+    <title>{% block title %}LuniSekai{% endblock %}</title>
+</head>
+<body>
+<div class="hero">
+    {% block header %}
+        {% include 'includes/header.html' %}
+    {% endblock %}
+    {% block content %}{% endblock %}
+    <script src="{% static 'js/dropdown-menu.js' %}"></script>
+</div>
+</body>
+</html>
