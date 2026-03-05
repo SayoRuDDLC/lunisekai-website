@@ -1,0 +1,86 @@
+<form action="" method="post" class="form" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+
+    <div class="form__errors">
+        {% for error in form.non_field_errors %}
+            <div class="form__non-field-errors">
+                <p class="form__non-field-error">{{ error }}</p>
+            </div>
+        {% endfor %}
+        {% for field in form %}
+            {% if field.errors %}
+                <div class="form__field-errors">
+                    {% for error in field.errors %}
+                        <p class="form__field-error">{{ field.label }}: {{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <input type="hidden" name="anime_id" value="{{ anime_id }}">
+
+    <div class="form__required-fields">
+        <div class="form__fields-wrapper">
+            <div class="form__title-wrapper">
+                <p class="form__title-label">{{ form.title.label }}</p>
+                {{ form.title }}
+            </div>
+            <div class="form__release-year-wrapper">
+                <p class="form__release-year-label">{{ form.release_year.label }}</p>
+                {{ form.release_year }}
+            </div>
+        </div>
+
+        <div class="form__radio-wrapper">
+            <p class="form__release-season-label">{{ form.release_season.label }}</p>
+            {{ form.release_season }}
+        </div>
+        <div class="form__radio-wrapper">
+            <p class="form__format-label">{{ form.format.label }}</p>
+            {{ form.format }}
+        </div>
+        <div class="form__radio-wrapper">
+            <p class="form__age-rating-label">{{ form.age_rating.label }}</p>
+            {{ form.age_rating }}
+        </div>
+        <div class="form__radio-wrapper">
+            <p class="form__publish-status-label">{{ form.publish_status.label }}</p>
+            {{ form.publish_status }}
+        </div>
+    </div>
+
+    <div class="form__optional-fields">
+        <div class="form__title-alter-wrapper">
+            <p class="form__title-alter-label">{{ form.title_alter.label }}</p>
+            {{ form.title_alter }}
+        </div>
+        <div class="form__slug-wrapper">
+            <p class="form__slug-label">{{ form.slug.label }}</p>
+            {{ form.slug }}
+        </div>
+        <div class="form__desc-wrapper">
+            <p class="form__desc-label">{{ form.desc.label }}</p>
+            {{ form.desc }}
+        </div>
+        <div class="form__checkbox-wrapper">
+            <p class="form__genres-label">{{ form.genres.label }}</p>
+            {{ form.genres }}
+        </div>
+        <div class="form__radio-wrapper">
+            <p class="form__status-label">{{ form.status.label }}</p>
+            {{ form.status }}
+        </div>
+        <div class="form__studio-and-poster">
+            <div class="form__studio-wrapper">
+                <p class="form__studio-label">{{ form.studio.label }}</p>
+                {{ form.studio }}
+            </div>
+            <div class="form__poster-wrapper">
+                <p class="form__poster-label">{{ form.poster.label }}</p>
+                {{ form.poster }}
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="form__submit-btn">Сохранить</button>
+</form>

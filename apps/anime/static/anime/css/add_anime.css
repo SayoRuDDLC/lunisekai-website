@@ -1,0 +1,251 @@
+.main {
+    color: white;
+}
+
+.main .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-top: 20px;
+}
+
+.form {
+    background-color: var(--color-very-dark-gray);
+    width: 70%;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 60px;
+}
+
+input {
+    background-color: var(--color-very-dark-gray);
+    border: 1px solid var(--color-dark-gray);
+    border-radius: 5px;
+    padding-left: 10px;
+    height: 40px;
+}
+
+
+input[type='radio'], input[type='checkbox'] {
+    accent-color: var(--color-red);
+    width: 14px;
+    margin-bottom: 4px;
+    margin-left: 0;
+    margin-right: 6px;
+}
+
+#form__studio {
+    background-color: var(--color-very-dark-gray);
+}
+
+#form__release-year::-webkit-outer-spin-button, #form__release-year::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.form__errors {
+    margin-bottom: 20px;
+}
+
+.form__field-error {
+    color: var(--color-red);
+}
+
+.form__non-field-error {
+    color: var(--color-dark-red);
+}
+
+/* --------------------------------------------------------------------- */
+/* Required Fields */
+/* --------------------------------------------------------------------- */
+
+.form__required-fields {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form__fields-wrapper {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.form__title-wrapper, .form__release-year-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+#form__title {
+    width: 500px;
+}
+
+#form__release-year {
+    width: 120px;
+}
+
+.form__radio-wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.form__radio-wrapper p, .form__radio-wrapper label {
+    display: flex;
+    align-items: center;
+}
+
+#form__release-season, #form__format, #form__age-rating, #form__publish-status {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* --------------------------------------------------------------------- */
+/* Optional Fields */
+/* --------------------------------------------------------------------- */
+
+.form__optional-fields {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+    margin-top: 40px;
+}
+
+.form__optional-fields::before {
+    content: '';
+    position: absolute;
+    background-color: var(--color-dark-gray);
+    width: 100%;
+    height: 1px;
+    opacity: 0.7;
+    top: -20px;
+}
+
+.form__title-alter-wrapper, .form__slug-wrapper {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 12px;
+}
+
+.form__desc-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
+#form__desc {
+    width: 100%;
+    height: 200px;
+    background-color: var(--color-very-dark-gray);
+    border: 1px solid var(--color-dark-gray);
+    border-radius: 5px;
+    padding-left: 10px;
+    padding-top: 6px;
+    resize: none;
+}
+
+.form__checkbox-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+#form__genres {
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    justify-content: space-between;
+}
+
+.form__checkbox-wrapper p, .form__checkbox-wrapper label {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+#form__status {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.form__studio-and-poster {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 50px;
+    margin-top: 12px;
+}
+
+.form__studio-wrapper, .form__poster-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+#form__studio {
+    width: 300px;
+    padding-left: 10px;
+    background-color: var(--color-very-dark-gray);
+    border: 1px solid var(--color-dark-gray);
+    border-radius: 5px;
+    height: 40px;
+    -webkit-appearance: none;
+}
+
+
+.form__poster-wrapper input::file-selector-button {
+    display: none;
+}
+
+.form__poster-wrapper input {
+    padding-top: 4px;
+}
+
+.form__submit-btn {
+    width: 100%;
+    height: 40px;
+    background-color: var(--color-dark-red);
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.anime-list {
+    width: 26%;
+    max-height: 600px;
+    overflow-y: auto;
+    right: 90px;
+    background-color: var(--color-very-dark-gray);
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.anime-list__title {
+    position: relative;
+}
+
+.anime-list__title::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    background-color: var(--color-dark-gray);
+    opacity: 0.7;
+    left: 0;
+    bottom: -4px;
+}
+
+.anime-list__list {
+    margin-top: 16px;
+}
+
+.anime-list__item {
+    font-size: var(--font-size-small);
+    margin-top: 10px;
+    line-height: 16px;
+}

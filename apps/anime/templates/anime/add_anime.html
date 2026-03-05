@@ -8,9 +8,32 @@
 {% block title %}Добавить аниме{% endblock %}
 
 {% block content %}
-    <form action="" method="POST" novalidate>
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Отправить</button>
-    </form>
+    <main class="main">
+        <div class="container">
+
+            {% include 'anime/includes/add_anime_form.html' %}
+
+            <div class="anime-list">
+                <h2 class="anime-list__title">Список аниме</h2>
+                {% if anime_list %}
+                    <ul class="anime-list__list">
+                        {% for anime in anime_list %}
+                            <li class="anime-list__item">
+                                <div hx-get="{% url 'htmx:edit_anime' anime.slug %}" hx-target=".form"
+                                     hx-swap="outerHTML"
+                                     class="anime-list__link">
+                                    {{ anime }}
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+
+                {% else %}
+                    <p class="anime-list__empty">Пусто</p>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+
+    {#    novalidate#}
 {% endblock %}

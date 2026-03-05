@@ -49,14 +49,10 @@
                         </p>
                         <p class="anime__detail">Статус</p>
                         <p class="anime__status">
-                            {% if anime.status %}
-                                <a href="{% url 'anime:anime_status' anime.status %}"
-                                   class="anime__link">{{ anime.get_status_display }}</a>
-                            {% else %}
-                                Неизвестно
-                            {% endif %}
+                            <a href="{% url 'anime:anime_status' anime.status %}"
+                               class="anime__link">{{ anime.get_status_display }}</a>
                         </p>
-                        <p class="anime__detail">Возраст</p>
+                        <p class="anime__detail">Возрастной рейтинг</p>
                         <p class="anime__age-rating">{{ anime.get_age_rating_display }}</p>
                         <p class="anime__detail">Студия</p>
                         <p class="anime__studio">
@@ -70,10 +66,10 @@
                         </p>
                     </div>
                     <div class="anime__buttons">
-                        <button class="anime__watch-btn anime__btn" aria-label="Смотреть онлайн">
+                        <a href="#anime-player" class="anime__watch-btn anime__btn" aria-label="Смотреть онлайн">
                             <img src="{% static 'anime/images/icons/play.png' %}" alt="" class="anime__icon">
                             Смотреть онлайн
-                        </button>
+                        </a>
                         <button class="anime__add-list-btn anime__btn" aria-label="Добавить в список">
                             <img src="{% static 'anime/images/icons/add_list.png' %}" alt="" class="anime__icon">
                             Добавить в список
@@ -98,7 +94,7 @@
             {% endif %}
 
             {% if anime.episodes_numbers %}
-                <div class="player">
+                <div class="player" id="anime-player">
                     <div class="player__video-and-voices">
                         <div hx-get="{% url 'htmx:get_episode' anime.slug anime.episodes_numbers.0.number %}"
                              hx-target=".player__video-and-voices"

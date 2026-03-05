@@ -1,6 +1,6 @@
 from django.db.models.signals import post_delete, pre_save
 from django.dispatch import receiver
-from .models import Still
+from .models import Still, Anime
 
 # Сигналы не срабатывают для bulk операций (filter() и update())
 @receiver(post_delete, sender=Still, dispatch_uid="delete_still_delete")
@@ -23,3 +23,16 @@ def delete_old_still_file(sender, instance, **kwargs):
     if old_image and old_image != new_image:
         old_image.delete(save=False)
 
+@receiver(pre_save, sender=Anime, dispatch_uid='delete_old_anime_poster')
+def delete_old_anime_poster(sender, instance, **kwargs):
+    if not instance.pk:
+        return
+
+    try:
+        old_poster = Anime.objects.get(pk=instance.pk).poster
+    except Anime.DoesNotExist:
+        return
+
+    new_poster = instance.poster
+    if old_poster and old_poster != new_poster:
+        old_poster.delete(save=False)

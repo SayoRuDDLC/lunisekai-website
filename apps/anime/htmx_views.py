@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.http import HttpResponse, Http404
 from .models import Anime, Episode
 from functools import wraps
+from .forms import AddAnimeForm
+
 
 def htmx_only(view_func):
     @wraps(view_func)
@@ -11,6 +13,7 @@ def htmx_only(view_func):
         return view_func(request, *args, **kwargs)
 
     return wrapper
+
 
 @htmx_only
 def get_desc(request, anime_slug):
@@ -44,3 +47,33 @@ def get_episode(request, anime_slug, episode_number):
         }
     )
 
+
+@htmx_only
+def edit_anime(request, anime_slug):
+    anime = get_object_or_404(
+        Anime.objects.select_related('studio').prefetch_related('genres'),
+        slug=anime_slug
+    )
+
+    form = AddAnimeForm(instance=anime)
+    return render(
+        request, 'anime/includes/add_anime_form.html', context={'form': form, 'anime_id': anime.id}
+    )
+
+    # form = AddAnimeForm(
+    #     initial={
+    #         'title': anime.title,
+    #         'release_year': anime.release_year,
+    #         'release_season': anime.release_season,
+    #         'format': anime.format,
+    #         'age_rating': anime.age_rating,
+    #         'publish_status': anime.publish_status,
+    #         'title_alter': anime.title_alter,
+    #         'slug': anime.slug,
+    #         'desc': anime.desc,
+    #         'genres': anime.genres.all(),
+    #         'status': anime.status,
+    #         'studio': anime.studio,
+    #         'poster': anime.poster
+    #     }
+    # )

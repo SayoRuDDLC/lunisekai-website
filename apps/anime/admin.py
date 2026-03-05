@@ -8,7 +8,24 @@ import zipfile
 # admin.site.register(Anime)
 # admin.site.register(Episode)
 
+# Filters
+class AgeRatingFilter(admin.SimpleListFilter):
+    title = 'Возрастной рейтинг'
+    parameter_name = 'age-rating'
 
+    def lookups(self, request, modeladmin):
+        return [
+            ('adult', 'Для взрослых'),
+            ('young', 'Для юных')
+        ]
+
+    def queryset(self, request, queryset):
+        if self.value() == 'adult':
+            return queryset.filter(age_rating='18+')
+        elif self.value() == 'young':
+            return queryset.exclude(age_rating='18+')
+
+# Models
 @admin.register(Still)
 class StillAdmin(admin.ModelAdmin):
     list_display = ('id', 'anime')
@@ -31,23 +48,6 @@ class StillAdmin(admin.ModelAdmin):
         else:
             super().save_model(request, obj, form, change)
 
-
-class AgeRatingFilter(admin.SimpleListFilter):
-    title = 'Возрастной рейтинг'
-    parameter_name = 'age-rating'
-
-    def lookups(self, request, modeladmin):
-        return [
-            ('adult', 'Для взрослых'),
-            ('young', 'Для юных')
-        ]
-
-    def queryset(self, request, queryset):
-        if self.value() == 'adult':
-            return queryset.filter(age_rating='18+')
-        elif self.value() == 'young':
-            return queryset.exclude(age_rating='18+')
-
 # Кастомное действие над выбранными полями
 @admin.action(description='Опубликовать выбранные аниме')
 def publish(modeladmin, request, queryset):
@@ -63,7 +63,7 @@ class AnimeAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'publish_status', 'slug')
     list_display_links = ('id', 'title')
     list_editable = ('publish_status',)
-    list_per_page = 10
+    list_per_page = 30
     list_filter = (AgeRatingFilter, 'publish_status', 'status', )
     search_fields = ('title', )
     filter_horizontal = ('genres',)

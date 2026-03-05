@@ -18,6 +18,15 @@
     {% block header %}
         {% include 'includes/header.html' %}
     {% endblock %}
+
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="messages__alert">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     {% block content %}{% endblock %}
     <script src="{% static 'js/dropdown-menu.js' %}"></script>
 </div>

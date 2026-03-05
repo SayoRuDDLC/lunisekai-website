@@ -1,14 +1,16 @@
-from random import randint
 from django.db import models
 from django.db.models import Count, Min, Max
 from slugify import slugify
 from django.shortcuts import reverse
 import uuid
+import random
+
 
 '''
 get_<choice>_display - чтобы выводить второе название в шаблоне (Черновик, Выходит и т.д.)
 AnimeFormat(format_name).label - чтобы получить второе название в py-файле
 '''
+
 
 class AutoSlugMixin(models.Model):
     title_field = 'title'
@@ -33,19 +35,24 @@ class AutoSlugMixin(models.Model):
 def still_upload_path(instance, filename):
     return f'anime/images/stills/{instance.anime.id}/{filename}'
 
+
 def episode_upload_path(instance, filename):
     return f'anime/episodes/{instance.episode.anime.id}/{filename}'
+
 
 class PublishStatus(models.TextChoices):
     DRAFT = 'draft', 'Черновик'
     PUBLISHED = 'published', 'Опубликовано'
     HIDDEN = 'hidden', 'Скрыто'
 
+
 class AnimeStatus(models.TextChoices):
+    UNKNOWN = 'unknown', 'Неизвестно'
     ANNOUNCED = 'announced', 'Анонсировано'
     ONGOING = 'ongoing', 'Выходит'
     COMPLETED = 'completed', 'Завершено'
     HIATUS = 'hiatus', 'Пауза'
+
 
 class AnimeFormat(models.TextChoices):
     TV = 'tv', 'TV'
@@ -55,19 +62,20 @@ class AnimeFormat(models.TextChoices):
     SERIES = 'series', 'Сериал'
     SPECIAL = 'special', 'Спец. выпуск'
 
+
 class ReleaseSeason(models.TextChoices):
     SPRING = 'spring', 'Весна'
     SUMMER = 'summer', 'Лето'
     AUTUMN = 'autumn', 'Осень'
     WINTER = 'winter', 'Зима'
 
-class AgeRating(models.TextChoices):
-    G = 'g', 'G' # Нет возрастных ограничений
-    PG = 'pg', 'PG' # Рекомендуется присутствие взрослых
-    PG13 = 'pg13', 'PG-13' # Детям до 13 лет просмотр не желателен
-    R17 = 'r17', 'R-17' # Лицам до 17 лет обязательно присутствие взрослого
-    R18 = 'r18', 'R-18' # Лицам до 18 лет просмотр запрещен
 
+class AgeRating(models.TextChoices):
+    G = 'g', 'G'  # Нет возрастных ограничений
+    PG = 'pg', 'PG'  # Рекомендуется присутствие взрослых
+    PG13 = 'pg13', 'PG-13'  # Детям до 13 лет просмотр не желателен
+    R17 = 'r17', 'R-17'  # Лицам до 17 лет обязательно присутствие взрослого
+    R18 = 'r18', 'R-18'  # Лицам до 18 лет просмотр запрещен
 
 
 # Кастомный QuerySet
@@ -108,15 +116,14 @@ class AnimeQuerySet(models.QuerySet):
         return self.annotate(episodes_count=Count('episodes'))
 
     def random(self):
-        stats = self.aggregate(min_id=Min('id'), max_id=Max('id'))
-        min_id = stats['min_id']
-        max_id = stats['max_id']
+        count = self.count()
 
-        if min_id is None:
+        if not count:
             return None
 
-        random_id = randint(min_id, max_id)
-        return self.filter(id__gte=random_id).order_by('id').first()
+        random_offset = random.randint(0, count - 1)
+        return self.order_by('id')[random_offset]
+
 
     def by_format(self, format):
         if format not in AnimeFormat.values:
@@ -147,6 +154,13 @@ class AnimeQuerySet(models.QuerySet):
 
         return self.filter(**filters)
 
+    def order_new(self):
+        return self.order_by('-created_at')
+
+    def order_updated(self):
+        return self.order_by('-updated_at')
+
+
 class Studio(AutoSlugMixin, models.Model):
     name = models.CharField(max_length=255, unique=True, verbose_name='Название')
     slug = models.SlugField(unique=True, blank=True, verbose_name='URL')
@@ -158,6 +172,7 @@ class Studio(AutoSlugMixin, models.Model):
 
     def get_absolute_url(self):
         return reverse('anime:anime_studio', kwargs={'studio_slug': self.slug})
+
 
 class Still(models.Model):
     anime = models.ForeignKey('Anime', on_delete=models.CASCADE, related_name='stills', verbose_name='Аниме')
@@ -195,16 +210,19 @@ class Anime(AutoSlugMixin, models.Model):
     slug = models.SlugField(unique=True, blank=True, verbose_name='URL')
     desc = models.TextField(blank=True, verbose_name='Описание')
     format = models.CharField(
-        max_length=20, choices=AnimeFormat.choices, default=AnimeFormat.ONA, verbose_name='Формат'
+        max_length=20, choices=AnimeFormat.choices, default=AnimeFormat.TV, verbose_name='Формат'
     )
     genres = models.ManyToManyField(Genre, blank=True, related_name='anime', verbose_name='Жанры')
     release_year = models.PositiveSmallIntegerField(null=True, verbose_name='Год выхода')
-    release_season = models.CharField(max_length=10, choices=ReleaseSeason.choices, verbose_name='Сезон выхода')
-    status = models.CharField(max_length=15, blank=True, choices=AnimeStatus.choices, verbose_name='Статус')
+    release_season = models.CharField(max_length=10, choices=ReleaseSeason.choices, default=ReleaseSeason.SPRING,
+                                      verbose_name='Сезон выхода')
+    status = models.CharField(max_length=15, choices=AnimeStatus.choices, default=AnimeStatus.UNKNOWN,
+                              verbose_name='Статус')
     publish_status = models.CharField(
         max_length=10, choices=PublishStatus.choices, default=PublishStatus.DRAFT, verbose_name='Статус публикации'
     )
-    age_rating = models.CharField(max_length=10, choices=AgeRating.choices, verbose_name='Возрастной рейтинг')
+    age_rating = models.CharField(max_length=10, choices=AgeRating.choices, default=AgeRating.G,
+                                  verbose_name='Возрастной рейтинг')
     studio = models.ForeignKey(
         Studio, on_delete=models.SET_NULL, blank=True, null=True, related_name='anime', verbose_name='Студия'
     )
@@ -212,17 +230,17 @@ class Anime(AutoSlugMixin, models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Добавлено')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлено')
 
-    all_objects = models.Manager() # Все объекты (стандартный менеджер)
-    objects = AnimeQuerySet.as_manager() # Только опубликованные (кастомный QuerySet представленный в виде менеджера)
+    all_objects = models.Manager()  # Все объекты (стандартный менеджер)
+    objects = AnimeQuerySet.as_manager()  # Только опубликованные (кастомный QuerySet представленный в виде менеджера)
 
     class Meta:
-        verbose_name = 'Anime' # Название в админке в ед. числе
-        verbose_name_plural = 'Anime' # Название в админке мн. числе
+        verbose_name = 'Anime'  # Название в админке в ед. числе
+        verbose_name_plural = 'Anime'  # Название в админке мн. числе
         indexes = [
             models.Index(fields=['title'], name='anime_title_idx'),
             models.Index(fields=['publish_status'], name='anime_publish_status_idx'),
         ]
-        ordering = ['-created_at'] # Сначала новые
+        ordering = ['-created_at']  # Сначала новые
 
     def __str__(self):
         return self.title
@@ -241,6 +259,7 @@ class VoiceStudio(AutoSlugMixin, models.Model):
     def __str__(self):
         return self.name
 
+
 class Episode(models.Model):
     anime = models.ForeignKey(Anime, on_delete=models.CASCADE, related_name='episodes', verbose_name='Аниме')
     number = models.PositiveSmallIntegerField(verbose_name='Номер серии')
@@ -255,10 +274,12 @@ class Episode(models.Model):
     def __str__(self):
         return f'{self.anime.title} - серия {self.number}'
 
+
 class EpisodeVideo(models.Model):
     episode = models.ForeignKey(Episode, on_delete=models.CASCADE, related_name='videos', verbose_name='Эпизод')
     video = models.FileField(upload_to=episode_upload_path, verbose_name='Видео', null=True)
-    voice = models.ForeignKey(VoiceStudio, on_delete=models.DO_NOTHING, related_name='videos', verbose_name='Озвучка', null=True)
+    voice = models.ForeignKey(VoiceStudio, on_delete=models.SET_NULL, null=True, related_name='videos',
+                              verbose_name='Озвучка')
 
     def __str__(self):
         return f'{self.episode} - {self.voice}'

@@ -71,8 +71,8 @@
 
 .anime__details {
     display: grid;
-    grid-template-columns: 200px 1fr;
-    grid-auto-rows: 40px;
+    grid-template-columns: 280px minmax(0px, 780px);
+    grid-auto-rows: minmax(40px, auto);
 }
 
 .anime__detail {

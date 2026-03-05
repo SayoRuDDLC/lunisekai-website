@@ -1,8 +1,10 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.http import HttpResponse, Http404
+from django.contrib import messages
+
 from .models import Anime, AnimeFormat, ReleaseSeason, Genre, AnimeStatus, Studio
-from .forms import AddAnimeForm, TestForm
+from .forms import AddAnimeForm
 
 
 # Функции-хелперы
@@ -29,6 +31,13 @@ def ensure_not_empty(queryset):
     if not queryset.exists():
         raise Http404()
     return queryset
+
+
+def get_object_or_none(queryset, **kwargs):
+    try:
+        return queryset.get(**kwargs)
+    except queryset.model.DoesNotExist:
+        return None
 
 
 # Маршруты
@@ -140,18 +149,43 @@ def anime_season(request, season_slug=None, year=None):
     return get_anime_list(request, data, context={'list_title': f'Аниме по сезону: {season_label} {year or ""}'})
 
 
+'''
+messages.success()
+messages.error()
+messages.warning()
+messages.info()
+
+----------
+form.add_error('age_rating', 'Ошибка!')
+'''
+
+
 def add_anime(request):
     if request.method == 'POST':
-        form = TestForm(request.POST)
-        if form.is_valid():
-            # form.add_error('age_rating', 'В+хдфцзвхфцхвзцфв')
-            print(form.cleaned_data)
-    else:
-        form = TestForm(initial={
-            'title': 'Ыыы типа аниме'
-        })
+        anime_id = request.POST.get('anime_id')
 
-    return render(request, 'anime/add_anime.html', context={'form': form})
+        if anime_id:
+            anime = get_object_or_none(
+                Anime.objects,
+                pk=anime_id,
+            )
+
+            form = AddAnimeForm(request.POST, request.FILES, instance=anime)
+            message = 'Аниме успешно обновлено'
+        else:
+            form = AddAnimeForm(request.POST, request.FILES)
+            message = 'Аниме успешно добавлено'
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, message)
+            return redirect('anime:add_anime')
+
+    else:
+        form = AddAnimeForm()
+
+    data = Anime.objects.order_updated()
+    return render(request, 'anime/add_anime.html', context={'form': form, 'anime_list': data})
 
 
 def manga_list(request):
