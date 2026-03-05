@@ -248,4 +248,14 @@ input[type='radio'], input[type='checkbox'] {
     font-size: var(--font-size-small);
     margin-top: 10px;
     line-height: 16px;
+    cursor: pointer;
+    transition: 0.1s;
+}
+
+.anime-list__item:hover {
+    color: var(--color-red);
+}
+
+.anime-list__item-active {
+    color: var(--color-red);
 }
