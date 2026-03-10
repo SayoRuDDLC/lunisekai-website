@@ -1,12 +1,10 @@
-.main {
-    color: white;
-}
+/* Add Anime */
 
 .main .container {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    padding-top: 20px;
+    padding-top: 30px;
 }
 
 .form {
@@ -252,6 +250,10 @@ input[type='radio'], input[type='checkbox'] {
     transition: 0.1s;
 }
 
+.anime-list__empty {
+    margin-top: 12px;
+}
+
 .anime-list__item:hover {
     color: var(--color-red);
 }
@@ -259,3 +261,4 @@ input[type='radio'], input[type='checkbox'] {
 .anime-list__item-active {
     color: var(--color-red);
 }
+

@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.http import HttpResponse, Http404
 from .models import Anime, Episode
 from functools import wraps
+from django.utils.decorators import method_decorator
 from .forms import AddAnimeForm
 
 
@@ -77,3 +78,23 @@ def edit_anime(request, anime_slug):
     #         'poster': anime.poster
     #     }
     # )
+
+
+# from django.views.generic import UpdateView
+
+# Через CBV
+# @method_decorator(htmx_only, name="dispatch")
+# class EditAnime(UpdateView):
+#     model = Anime
+#     form_class = AddAnimeForm
+#     template_name = "anime/includes/add_anime_form.html"
+#     slug_url_kwarg = "anime_slug"
+#     slug_field = "slug"
+#
+#     def get_queryset(self):
+#         return Anime.objects.select_related('studio').prefetch_related('genres')
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context["anime_id"] = self.object.id
+#         return context

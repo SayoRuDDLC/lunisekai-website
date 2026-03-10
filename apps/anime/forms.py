@@ -111,12 +111,14 @@ class AddAnimeForm(forms.ModelForm):
 
         required_error_message = 'Данное поле является обязательным для заполнения.'
         invalid_choice_error_message = 'Данное значение является недопустимым.'
+        invalid_error_message = 'Некорректные данные'
         error_messages = {
             'title': {
                 'required': required_error_message,
             },
             'release_year': {
                 'required': required_error_message,
+                'invalid': invalid_error_message
             },
             'release_season': {
                 'required': required_error_message,

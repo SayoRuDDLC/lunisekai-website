@@ -14,6 +14,6 @@ urlpatterns = [
     path('anime/season/<slug:season_slug>/<int:year>/', views.anime_season, name='anime_season_and_year'),
     path('anime/add-anime/', views.add_anime, name='add_anime'),
     path('anime/<slug:anime_slug>/', views.anime_detail, name='anime_detail'),
-    path('manga/', views.manga_list, name='manga_list'),
+    path('manga/', views.MangaIndex.as_view(), name='manga_list'),
     path('light-novels/', views.novel_list, name='novel_list')
 ]

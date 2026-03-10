@@ -1,8 +1,4 @@
-@import "/static/css/variables.css";
 /* Anime Detail */
-.anime {
-    color: var(--color-white);
-}
 
 .anime__title {
     font-size: var(--font-size-big);

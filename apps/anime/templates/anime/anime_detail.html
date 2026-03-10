@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block content %}
-    <main class="main anime">
+    <main class="anime">
         <div class="container">
             <h1 class="anime__title">{{ anime.title }}</h1>
             <h2 class="anime__title-alter">{{ anime.title_alter }}</h2>
@@ -23,6 +23,9 @@
                     <div class="anime__img-wrapper">
                         {% if anime.poster %}
                             <img src="{{ anime.poster.url }}" alt="{{ anime.title }}" class="anime__poster">
+                        {% else %}
+                            <img src="{% static 'images/posters/img-not-found.webp' %}" alt="Постер не найден"
+                                 class="anime__poster">
                         {% endif %}
                     </div>
                 </div>

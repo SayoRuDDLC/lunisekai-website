@@ -2,5 +2,9 @@
 
 {% block title %} Список манги {% endblock %}
 {% block content %}
-    Это список манги!
+    {{ title_page }}
+
+    {% for manga in manga_list %}
+        {{ manga }}
+    {% endfor %}
 {% endblock %}

@@ -2,6 +2,11 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.http import HttpResponse, Http404
 from django.contrib import messages
+from django.urls import reverse_lazy
+from django.views import View
+from django.views.generic.base import TemplateView
+from django.views.generic import ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
+from .utils import DataMixin
 
 from .models import Anime, AnimeFormat, ReleaseSeason, Genre, AnimeStatus, Studio
 from .forms import AddAnimeForm
@@ -194,3 +199,81 @@ def manga_list(request):
 
 def novel_list(request):
     return render(request, 'anime/novel_list.html')
+
+
+# class MangaIndex(View):
+#     def get(self, request):
+#         return render(request, 'anime/manga_list.html', context={'title': 'МАНГА'})
+#     def post(self, request):
+#         pass
+#
+# class MangaIndex(TemplateView):
+#     template_name = 'anime/manga_list.html'
+#     # extra_context не позволяет передавать динамически получаемые данные (например из request.GET и т.д.)
+#     # так как extra_context создает во время создания класса
+#     # extra_context = {
+#     #     'content': 'Это страница манги!'
+#     # }
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#
+#         # context.update(self.extra_context) # добавляем в context наш extra_context
+#         context['content'] = 'Это страница манги!'
+#         return context
+
+# class MangaIndex(ListView):
+#     template_name = 'anime/manga_list.html'
+#     context_object_name = 'manga_list'
+#     extra_context = {
+#         'title': 'Список манги'
+#     }
+#     allow_empty = False
+#
+#     def get_queryset(self):
+#         # return Anime.objects.published().filter(slug=self.kwargs['slug'])
+#         return Anime.objects.published()
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         return context
+#         # manga = context['manga_list'][0]
+#
+
+# class MangaIndex(DetailView):
+#     template_name = 'anime/manga_list.html'
+#     context_object_name = 'manga'
+#     slug_url_kwarg = 'manga_slug'
+#
+#     def get_object(self, queryset=None):
+#         return get_object_or_404(Anime.objects.published(), slug=self.kwargs[self.slug_url_kwarg])
+
+# class MangaIndex(FormView):
+#     form_class = AddAnimeForm
+#     template_name = 'anime/add_anime.html'
+#     success_url = reverse_lazy('anime:home')
+#
+#     # def get_context_data(self, **kwargs):
+#     #     context = super().get_context_data(**kwargs)
+#     #     context['anime_form'] = context.pop('form') # удаляет form и возвращает его значение
+#     #     return context
+#
+#     def form_valid(self, form):
+#         form.save()
+#         # return redirect('anime:home') # можно самому прописать redirect вместо return super().form_valid(form)
+#         return super().form_valid(form) # вызывает стандартный redirect используя success_url
+
+# class MangaIndex(CreateView):
+#     form_class = AddAnimeForm
+#     template_name = 'anime/add_anime.html'
+#     success_url = reverse_lazy('anime:add_anime')
+
+
+class MangaIndex(DataMixin, ListView):
+    template_name = 'anime/manga_list.html'
+    context_object_name = 'manga_list'
+    allow_empty = False
+    title_page = 'Страница мангиии'
+
+    def get_queryset(self):
+        return Anime.objects.published()

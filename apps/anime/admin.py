@@ -3,6 +3,7 @@ from .models import Anime, Episode, Genre, Studio, Still, PublishStatus, Episode
 from django.contrib import messages
 from .forms import AddStillsAdminForm
 from django.core.files.base import ContentFile
+from django.utils.safestring import mark_safe
 import zipfile
 
 # admin.site.register(Anime)
@@ -48,35 +49,44 @@ class StillAdmin(admin.ModelAdmin):
         else:
             super().save_model(request, obj, form, change)
 
-# Кастомное действие над выбранными полями
-@admin.action(description='Опубликовать выбранные аниме')
-def publish(modeladmin, request, queryset):
-    updated = queryset.update(publish_status=PublishStatus.PUBLISHED)
-    modeladmin.message_user(
-        request,
-        f"Опубликовано: {updated}",
-        messages.SUCCESS
-    )
-
 @admin.register(Anime)
 class AnimeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'publish_status', 'slug')
+    list_display = ('id', 'title', 'anime_poster_preview', 'publish_status', 'slug')
     list_display_links = ('id', 'title')
     list_editable = ('publish_status',)
+    readonly_fields = ('anime_poster_preview', )
     list_per_page = 30
     list_filter = (AgeRatingFilter, 'publish_status', 'status', )
     search_fields = ('title', )
     filter_horizontal = ('genres',)
-    actions = [publish]
+    actions = ['publish']
+    save_on_top = True
 
     fieldsets = (
     ('Обязательное', {
         'fields': ('title', 'format', 'release_year', 'release_season', 'age_rating', 'publish_status')
     }),
     ('Необязательное', {
-        'fields': ('title_alter', 'slug', 'desc', 'genres', 'status', 'studio', 'poster')
+        'fields': ('title_alter', 'slug', 'desc', 'genres', 'status', 'studio', 'poster', 'anime_poster_preview')
     })
     )
+
+    # Кастомное действие над выбранными полями
+    @admin.action(description='Опубликовать выбранные аниме')
+    def publish(self, request, queryset):
+        updated = queryset.update(publish_status=PublishStatus.PUBLISHED) # Возвращает кол-во опубликованных записей
+        self.message_user(
+            request,
+            f"Опубликовано: {updated}",
+            messages.SUCCESS
+        )
+
+    # Кастомное вычисляемое поле
+    @admin.display(description='Постер')
+    def anime_poster_preview(self, anime: Anime):
+        if anime.poster:
+            return mark_safe(f'<img src="{ anime.poster.url }" width=40>')
+        return 'Без постера'
 
 @admin.register(Episode)
 class EpisodeAdmin(admin.ModelAdmin):

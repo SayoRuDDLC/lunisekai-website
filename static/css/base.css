@@ -37,6 +37,7 @@ body {
     overflow-x: hidden;
 }
 
+
 body {
     overflow-y: hidden;
     background-color: var(--color-body);
@@ -44,6 +45,7 @@ body {
     font-size: var(--font-size-default);
     font-weight: var(--font-weight-default);
     line-height: var(--line-height-default);
+    color: var(--color-white);
 }
 
 img {
@@ -96,10 +98,8 @@ img {
     border-radius: 5px;
 }
 
-
-
-.main {
-    padding-top: 80px;
+.content {
+    padding-top: 64px;
 }
 
 

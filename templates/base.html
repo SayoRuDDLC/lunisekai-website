@@ -14,20 +14,23 @@
     <title>{% block title %}LuniSekai{% endblock %}</title>
 </head>
 <body>
-<div class="hero">
+<div class="page">
     {% block header %}
         {% include 'includes/header.html' %}
     {% endblock %}
 
-    {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <div class="messages__alert">{{ message }}</div>
-            {% endfor %}
-        </div>
-    {% endif %}
+    <div class="content">
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="messages__alert">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
-    {% block content %}{% endblock %}
+        {% block content %}{% endblock %}
+    </div>
+
     <script src="{% static 'js/dropdown-menu.js' %}"></script>
 </div>
 </body>

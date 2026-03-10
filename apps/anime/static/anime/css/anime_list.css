@@ -1,8 +1,7 @@
-@import "/static/css/variables.css";
 /* Anime List */
 
 .main .container {
-    padding-top: 20px;
+    padding-top: 30px;
     display: flex;
 }
 
