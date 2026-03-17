@@ -35,7 +35,7 @@
                         <p class="anime__format"><a href="{% url 'anime:anime_format' anime.format %}"
                                                     class="anime__link">{{ anime.get_format_display }}</a></p>
                         <p class="anime__detail">Эпизоды</p>
-                        <p class="anime__ep-count">{{ anime.episodes_count }}</p>
+                        <p class="anime__ep-count">{{ anime.anime_episodes|length }}</p>
                         <p class="anime__detail">Жанры</p>
                         <p class="anime__genres">
                             {% for genre in anime.active_genres %}
@@ -96,23 +96,24 @@
                 </div>
             {% endif %}
 
-            {% if anime.episodes_numbers %}
+            {% if anime.anime_episodes %}
                 <div class="player" id="anime-player">
                     <div class="player__video-and-voices">
-                        <div hx-get="{% url 'htmx:get_episode' anime.slug anime.episodes_numbers.0.number %}"
-                             hx-target=".player__video-and-voices"
-                             hx-trigger="load"></div>
+                        <div hx-get="{% url 'htmx:get_episode' anime.slug anime.anime_episodes.0.number %}"
+                             hx-swap="outerHTML"
+                             hx-trigger="load">
+                        </div>
                     </div>
                     <div class="player__nums">
                         <div class="player__info">Серия №</div>
                         <div class="player__nums-slider">
-                            {% for episode in anime.episodes_numbers %}
+                            {% for episode in anime.anime_episodes %}
                                 <div class="player__btn">
                                     <button hx-get="{% url 'htmx:get_episode' anime.slug episode.number %}"
                                             hx-target=".player__video-and-voices"
-                                            hx-swap="innerHTML swap:100ms"
-                                            class="player__num-btn {% if forloop.first %}btn-active{% endif %}">{{ episode.number }}
-                                        серия
+                                            hx-swap="innerHTML"
+                                            class="player__num-btn {% if episode.number == active.episode.number %}btn-active{% endif %}">
+                                        {{ episode.number }} серия
                                     </button>
                                 </div>
                             {% endfor %}
@@ -124,8 +125,10 @@
                     </div>
                 </div>
             {% endif %}
+
         </div>
     </main>
     <script src="{% static 'js/active-num-btn.js' %}"></script>
+    <script src="{% static 'js/slider.js' %}"></script>
 {% endblock %}
 

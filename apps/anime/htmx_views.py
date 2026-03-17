@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.http import HttpResponse, Http404
-from .models import Anime, Episode
+from .models import Anime, Episode, EpisodeVideo
 from functools import wraps
 from django.utils.decorators import method_decorator
 from .forms import AddAnimeForm
@@ -27,26 +27,27 @@ def get_desc(request, anime_slug):
     return render(request, template, {'anime': anime})
 
 
+
 @htmx_only
 def get_episode(request, anime_slug, episode_number):
-    voice_slug = request.GET.get('voice')
     episode = get_object_or_404(Episode, anime__slug=anime_slug, number=episode_number)
 
     videos = episode.videos.all()
+    voice_slug = request.GET.get('voice')
+
     if voice_slug:
         video = get_object_or_404(videos, voice__slug=voice_slug)
     else:
         video = videos.first()
 
-    return render(
-        request, 'anime/includes/anime_player.html',
-        context={
-            'episode': episode,
-            'video': video,
-            'videos': videos,
-            'active_voice_slug': voice_slug,
-        }
-    )
+    context = {
+        'episode': episode,
+        'videos': videos,
+        'video': video,
+        'active_voice_slug': voice_slug,
+    }
+
+    return render(request, 'anime/includes/anime_player.html', context=context)
 
 
 @htmx_only

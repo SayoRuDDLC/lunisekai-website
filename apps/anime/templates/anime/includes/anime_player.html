@@ -1,11 +1,12 @@
 {% load static %}
+
 <div class="player__video">
     {% if video %}
         <video controls preload="metadata" width="100%">
             <source src="{{ video.video.url }}" type="video/mp4">
         </video>
     {% else %}
-        <img src="{% static 'images/anime-not-found.jpg' %}" alt="Anime not found" class="player__not-found">
+        <img src="{% static 'images/anime-not-found.webp' %}" alt="Anime not found" class="player__not-found">
     {% endif %}
 </div>
 
@@ -22,8 +23,8 @@
                     {{ video.voice.name }}
                 </button>
             {% endfor %}
+        {% else %}
+            <p class="player__voice-not-found">Нет озвучки :(</p>
         {% endif %}
     </div>
 </div>
-
-

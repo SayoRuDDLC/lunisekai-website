@@ -16,13 +16,16 @@
     <main class="main">
         <div class="container">
             <div class="anime-list">
-                {% include 'anime/includes/anime_list_card.html' %}
+                <h1 class="anime-list__title" id="anime-list-title">{{ list_title }}</h1>
+                <ul class="anime-list__list">
+                    {% include 'anime/includes/anime_list_card.html' %}
+                </ul>
             </div>
 
             <div class="filters__wrapper">
                 <form class="filters" method="get" id="filters-form"
                       hx-get="{% url 'anime:anime_list' %}"
-                      hx-target=".anime-list"
+                      hx-target=".anime-list__list"
                       hx-replace-url='true'
                       hx-trigger="change"
                       autocomplete="off"

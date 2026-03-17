@@ -5,12 +5,10 @@ from django.shortcuts import reverse
 import uuid
 import random
 
-
 '''
 get_<choice>_display - чтобы выводить второе название в шаблоне (Черновик, Выходит и т.д.)
 AnimeFormat(format_name).label - чтобы получить второе название в py-файле
 '''
-
 
 class AutoSlugMixin(models.Model):
     title_field = 'title'
@@ -40,6 +38,7 @@ def episode_upload_path(instance, filename):
     return f'anime/episodes/{instance.episode.anime.id}/{filename}'
 
 
+# Этот класс называется перечисление (Enum), а в Django — Choices enumeration.
 class PublishStatus(models.TextChoices):
     DRAFT = 'draft', 'Черновик'
     PUBLISHED = 'published', 'Опубликовано'
@@ -89,10 +88,11 @@ class AnimeQuerySet(models.QuerySet):
     def draft(self):
         return self.filter(publish_status=PublishStatus.DRAFT).order_by('created_at')
 
-    def with_episodes_numbers(self):
+    def with_episodes(self):
         return self.prefetch_related(models.Prefetch(
-            'episodes', queryset=Episode.objects.only('number', 'anime'), to_attr='episodes_numbers'
+            'episodes', to_attr='anime_episodes'
         ))
+
 
     def with_genres(self):
         """
@@ -112,9 +112,6 @@ class AnimeQuerySet(models.QuerySet):
             'genres', to_attr='active_genres'
         ))
 
-    def with_episodes_count(self):
-        return self.annotate(episodes_count=Count('episodes'))
-
     def random(self):
         count = self.count()
 
@@ -124,14 +121,13 @@ class AnimeQuerySet(models.QuerySet):
         random_offset = random.randint(0, count - 1)
         return self.order_by('id')[random_offset]
 
-
     def by_format(self, format):
         if format not in AnimeFormat.values:
             return self.none()
         return self.filter(format=format)
 
-    def by_genre(self, genre_slug):
-        return self.filter(genres__slug=genre_slug)
+    def by_genre(self, genre):
+        return self.filter(genres__slug=genre)
 
     def by_status(self, status):
         if status not in AnimeStatus.values:
@@ -145,8 +141,6 @@ class AnimeQuerySet(models.QuerySet):
         filters = {}
 
         if season is not None:
-            if season not in ReleaseSeason.values:
-                return self.none()
             filters['release_season'] = season
 
         if year is not None:
@@ -167,6 +161,9 @@ class Studio(AutoSlugMixin, models.Model):
 
     title_field = 'name'
 
+    class Meta:
+        ordering = ['name']
+
     def __str__(self):
         return self.name
 
@@ -179,6 +176,7 @@ class Still(models.Model):
     image = models.ImageField(upload_to=still_upload_path, blank=True, verbose_name='Кадр')
 
     class Meta:
+        ordering = ['anime']
         verbose_name = 'Still'
         verbose_name_plural = 'Stills'
 
@@ -194,6 +192,7 @@ class Genre(AutoSlugMixin, models.Model):
     add_uuid = False
 
     class Meta:
+        ordering = ['name'] # Рекомендуется сортировать, иначе выводятся в случайном порядке
         verbose_name = 'Genre'
         verbose_name_plural = 'Genres'
 
@@ -249,16 +248,6 @@ class Anime(AutoSlugMixin, models.Model):
         return reverse('anime:anime_detail', kwargs={'anime_slug': self.slug})
 
 
-class VoiceStudio(AutoSlugMixin, models.Model):
-    name = models.CharField(max_length=255, verbose_name='Название студии')
-    slug = models.SlugField(unique=True, blank=True, verbose_name='URL')
-
-    title_field = 'name'
-    add_uuid = False
-
-    def __str__(self):
-        return self.name
-
 
 class Episode(models.Model):
     anime = models.ForeignKey(Anime, on_delete=models.CASCADE, related_name='episodes', verbose_name='Аниме')
@@ -278,8 +267,26 @@ class Episode(models.Model):
 class EpisodeVideo(models.Model):
     episode = models.ForeignKey(Episode, on_delete=models.CASCADE, related_name='videos', verbose_name='Эпизод')
     video = models.FileField(upload_to=episode_upload_path, verbose_name='Видео', null=True)
-    voice = models.ForeignKey(VoiceStudio, on_delete=models.SET_NULL, null=True, related_name='videos',
-                              verbose_name='Озвучка')
+    voice = models.ForeignKey(
+        'VoiceStudio', on_delete=models.SET_NULL, null=True, related_name='videos', verbose_name='Озвучка'
+    )
+
+    class Meta:
+        ordering = ['episode']
 
     def __str__(self):
         return f'{self.episode} - {self.voice}'
+
+
+class VoiceStudio(AutoSlugMixin, models.Model):
+    name = models.CharField(max_length=255, verbose_name='Название студии')
+    slug = models.SlugField(unique=True, blank=True, verbose_name='URL')
+
+    title_field = 'name'
+    add_uuid = False
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name

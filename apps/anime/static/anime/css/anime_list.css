@@ -15,7 +15,6 @@
 .anime-list__list {
     display: flex;
     flex-direction: column;
-    gap: 30px;
     margin-top: 50px;
 }
 
@@ -34,6 +33,10 @@
     opacity: 0.5;
     left: 0;
     bottom: 0;
+}
+
+.card:not(:first-of-type) {
+    margin-top: 30px;
 }
 
 .card {

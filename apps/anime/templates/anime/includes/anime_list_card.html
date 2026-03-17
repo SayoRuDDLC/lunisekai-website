@@ -1,37 +1,40 @@
 {% load static %}
-<h1 class="anime-list__title">{{ list_title }}</h1>
-<ul class="anime-list__list">
-    {% for anime in page_obj %}
-        <li class="card anime-list__card">
-            <div class="card__img-column">
-                <a href="{{ anime.get_absolute_url }}" class="card__img-link">
-                    {% if anime.poster %}
-                        <img src="{{ anime.poster.url }}" alt="Постер {{ anime.title }}" class="card__img">
-                    {% else %}
-                        <img src="{% static 'images/posters/img-not-found.webp' %}" alt="Постер не найден"
-                             class="card__img">
-                    {% endif %}
-                </a>
+
+{% if request.headers.hx_request %}
+    <h1 hx-swap-oob="true" class="anime-list__title" id="anime-list-title">{{ list_title }}</h1>
+{% endif %}
+
+{% for anime in page_obj %}
+    <li class="card anime-list__card">
+        <div class="card__img-column">
+            <a href="{{ anime.get_absolute_url }}" class="card__img-link">
+                {% if anime.poster %}
+                    <img src="{{ anime.poster.url }}" alt="Постер {{ anime.title }}" class="card__img">
+                {% else %}
+                    <img src="{% static 'images/posters/img-not-found.webp' %}" alt="Постер не найден"
+                         class="card__img">
+                {% endif %}
+            </a>
+        </div>
+        <div class="card__text-column">
+            <a href="{{ anime.get_absolute_url }}"
+               class="card__title">{{ anime.title|truncatechars:80 }}</a>
+            <span class="card__title-alter">{{ anime.title_alter|truncatechars:100 }}</span>
+            <div class="card__details">
+                <a href="{% url 'anime:anime_format' anime.format %}"
+                   class="card__format">{{ anime.get_format_display }}</a>
+                <a href="{% url 'anime:anime_season_and_year' anime.release_season anime.release_year %}"
+                   class="card__season">{{ anime.get_release_season_display }} {{ anime.release_year }}</a>
+                {% for genre in anime.active_genres %}
+                    <a href="{{ genre.get_absolute_url }}" class="card__genre">{{ genre.name }}</a>
+                {% endfor %}
             </div>
-            <div class="card__text-column">
-                <a href="{{ anime.get_absolute_url }}"
-                   class="card__title">{{ anime.title|truncatechars:80 }}</a>
-                <span class="card__title-alter">{{ anime.title_alter|truncatechars:100 }}</span>
-                <div class="card__details">
-                    <a href="{% url 'anime:anime_format' anime.format %}"
-                       class="card__format">{{ anime.get_format_display }}</a>
-                    <a href="{% url 'anime:anime_season_and_year' anime.release_season anime.release_year %}"
-                       class="card__season">{{ anime.get_release_season_display }} {{ anime.release_year }}</a>
-                    {% for genre in anime.active_genres %}
-                        <a href="{{ genre.get_absolute_url }}" class="card__genre">{{ genre.name }}</a>
-                    {% endfor %}
-                </div>
-                <p class="card__desc">{{ anime.desc|truncatechars:250 }}</p>
-            </div>
-        </li>
-    {% endfor %}
-</ul>
+            <p class="card__desc">{{ anime.desc|truncatechars:250 }}</p>
+        </div>
+    </li>
+{% endfor %}
 
 {% if page_obj.has_next %}
-    <div hx-get="?page={{ page_obj.next_page_number }}" hx-swap="outerHTML" hx-trigger="revealed"></div>
+    <div hx-get="?{{ params }}&page={{ page_obj.next_page_number }}" hx-swap="beforeend"
+         hx-trigger="revealed" hx-target=".anime-list__list"></div>
 {% endif %}
